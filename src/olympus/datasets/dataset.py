@@ -111,7 +111,7 @@ class Dataset:
                 self.dataset_type = "full_cat"
                 # load scales
                 datasets_path = os.path.dirname(os.path.abspath(__file__))
-                csv_file = "".join(f"{datasets_path}/dataset_{kind}/scales.csv")
+                csv_file = os.path.join(datasets_path, f"dataset_{kind}", "scales.csv")
                 try:
                     self.scales = read_csv(csv_file, header=None, names=[f'scales_{i}' for i in range(len(self.value_space))]) #.to_numpy()
                 except FileNotFoundError:
@@ -281,11 +281,11 @@ class Dataset:
         os.mkdir(folder)
 
         # save the numeric data
-        self.data.to_csv(f"{folder}/data.csv", header=False, index=False)
+        self.data.to_csv(os.path.join(folder, "data.csv"), header=False, index=False)
 
         # save the description
         self._generate_description()
-        with open(f"{folder}/description.txt", "w") as f:
+        with open(os.path.join(folder, "description.txt"), "w") as f:
             f.write(self._description)
 
         # save the config file
@@ -307,7 +307,7 @@ class Dataset:
             t = {"name": target, "type": "continuous"}
             _config["measurements"].append(t)
 
-        with open(f"{folder}/config.json", "w") as f:
+        with open(os.path.join(folder, "config.json"), "w") as f:
             f.write(json.dumps(_config, indent=4, sort_keys=True))
 
     def _generate_description(self):
@@ -692,25 +692,25 @@ def load_dataset(kind):
 
     # load description
     with open(
-        "".join(f"{datasets_path}/dataset_{kind}/description.txt")
+        os.path.join(datasets_path, f"dataset_{kind}", "description.txt")
     ) as txtfile:
         description = txtfile.read()
 
     # load info on features/targets
     with open(
-        "".join(f"{datasets_path}/dataset_{kind}/config.json"), "r"
+        os.path.join(datasets_path, f"dataset_{kind}", "config.json"), "r"
     ) as content:
         config = json.loads(content.read())
 
     # load data
-    csv_file = "".join(f"{datasets_path}/dataset_{kind}/data.csv")
+    csv_file = os.path.join(datasets_path, f"dataset_{kind}", "data.csv")
     try:
         data = read_csv(csv_file, header=None).to_numpy()
     except FileNotFoundError:
         Logger.log(f"Could not find data.csv for dataset {kind}", "FATAL")
 
     # load descriptors
-    csv_file = "".join(f"{datasets_path}/dataset_{kind}/descriptors.csv")
+    csv_file = os.path.join(datasets_path, f"dataset_{kind}", "descriptors.csv")
     # try:
     #     descriptors = read_csv(csv_file, header=None).to_numpy()
     # except FileNotFoundError:
@@ -724,7 +724,7 @@ def load_dataset(kind):
     # load constraints
     if config['constraints']['known'] == 'yes':
         # we should have some known constraints defined in a file called constraints.py
-        sys.path.insert(0, f'{__home__}/datasets/dataset_{kind}/')
+        sys.path.insert(0, os.path.join(__home__, "datasets", f"dataset_{kind}"))
         try:
             constraints_module = __import__('constraints')
             if not 'known_constraints' in dir(constraints_module):
@@ -748,7 +748,7 @@ def _validate_dataset_args(kind, data, columns, target_names):
         # TODO: reduce redundant code by importing the list from where we have it already
         module_path = os.path.dirname(os.path.abspath(__file__))
         olympus_datasets = []
-        for dir_name in glob(f"{module_path}/dataset_*"):
+        for dir_name in glob(os.path.join(module_path, "dataset_*")):
 
             if "/" in dir_name:
                 dir_name = dir_name.split("/")[-1][8:]
