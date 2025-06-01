@@ -5,7 +5,7 @@ import numpy as np
 import olympus
 from olympus import Logger
 from olympus.campaigns.observations import Observations
-from olympus.campaigns.param_space import ParameterSpace
+from olympus.utils.param_space import ParameterSpace
 from olympus.datasets import Dataset
 from olympus.scalarizers.scalarizer import Scalarizer
 from olympus.emulators.emulator import Emulator

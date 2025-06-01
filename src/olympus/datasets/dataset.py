@@ -9,7 +9,7 @@ import pandas as pd
 from pandas import DataFrame, read_csv
 
 from olympus import __home__, Logger
-from olympus.campaigns.param_space import ParameterSpace
+from olympus.utils.param_space import ParameterSpace
 from olympus.noises import GaussianNoise
 from olympus.objects import (
     Parameter,

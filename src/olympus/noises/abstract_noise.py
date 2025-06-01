@@ -5,7 +5,7 @@ from abc import abstractmethod
 import numpy as np
 
 from olympus import Logger
-from olympus.campaigns.param_space import ParameterContinuous, ParameterSpace
+from olympus.utils.param_space import ParameterContinuous, ParameterSpace
 from olympus.objects import (
     ABCMeta,
     Object,
